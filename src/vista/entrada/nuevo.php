@@ -3,13 +3,14 @@
 $entrada = $datosParaVista['datos'];
 $texto =  $entrada ? $entrada->getTexto() : '';
 $errores = $entrada ? $entrada->getErrores() : [];
-
+$idAutor = $sesion ? $sesion->getId() : '';
 
 ?>
 <div class="container">
     <h1>Nueva entrada</h1>
     <form action="index.php?controlador=entrada&accion=nuevo" method="post" enctype="multipart/form-data">
         <div class="mb-3">
+            <input type="text" name="id" value="<?= $id ?>" hidden>
             <label for="texto" class="form-label">
                 ¿En qué estás pensando? Tienes 128 caracteres para plasmarlo... el resto se ignorará
             </label>

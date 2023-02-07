@@ -1,6 +1,9 @@
 <?php
+session_start();
 require_once('vendor/autoload.php');
 require_once('config/config.php');
+
+
 
 /**********************************************************************************************************************
  * 1.- Obtener controlador y acción
@@ -35,6 +38,13 @@ include_once($controladorPath);
 $controladorNamespace = "dwesgram\controlador\\$controladorNombreClase";
 $controladorObjeto = new $controladorNamespace();
 
+/**
+ * 4.-Crear el objeto Sesion para determinar quien sube cada imagen y restringir y/o habilitar funcionalidades de la aplicación
+ */
+
+use dwesgram\modelo\utilidades\Sesion;
+
+$sesion = new Sesion();
 /**********************************************************************************************************************
  * 4.- Cargar la vista
  * 

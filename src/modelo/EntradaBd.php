@@ -66,11 +66,12 @@ class EntradaBd
     public static function insertar(Entrada $entrada): int|null
     {
         try {
+            $idautor = $entrada->getAutor();
             $texto = $entrada->getTexto();
             $imagen = $entrada->getImagen();
             $conexion = BaseDatos::getConexion();
-            $sentencia = $conexion->prepare("insert into entrada (autor,texto,imagen) values (1,?,?)");
-            $sentencia->bind_param('ss', $texto, $imagen);
+            $sentencia = $conexion->prepare("insert into entrada (autor,texto,imagen) values (?,?,?)");
+            $sentencia->bind_param('iss', $idautor, $texto, $imagen);
             $sentencia->execute();
             if ($sentencia == true) {
                 return $conexion->insert_id;
@@ -93,6 +94,27 @@ class EntradaBd
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;
+        }
+    }
+
+    public static function getAutorByEntradas(int $idAutor): bool|null
+    {
+        try {
+            $result = [];
+            $conexion = BaseDatos::getConexion();
+            $sentencia = $conexion->prepare("select id,texto,imagen,autor,creado from entrada where autor=?");
+            $sentencia->bind_param('i', $idAutor);
+            $sentencia->execute();
+            $resultado = $sentencia->get_result();
+            $fila = $resultado->fetch_assoc();
+            if ($fila == null) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return null;
         }
     }
 }

@@ -23,21 +23,23 @@ class Entrada extends Modelo
     }
     public static function crearEntradaDesdePost(array $POST, array $FILE)
     {
+        $idAutor = htmlentities(trim($POST['id']));
         $texto = $POST && isset($POST['texto']) ? htmlentities(trim($POST['texto'])) : "";
         $imagen = "./imagenes/default.jpg";
         if ($POST && isset($FILE['imagen']) && $FILE['imagen']['error'] == 0 && $FILE['imagen']['size'] > 0 ||  $FILE['imagen']['name'] > 0) {
             $imagen = null;
-            $tipoMIME = $FILE['imagen']['type'];
-            if ($tipoMIME == "image/png" || $tipoMIME == "image/jpeg" || $tipoMIME == "image/jpg") {
+            $imagenTmp = $FILE['imagen']['tmp_name'];
+            $tipoMIME = getimagesize($imagenTmp);
+            $tipo = $tipoMIME['mime'];
+            if ($tipo == "image/png" || $tipo == "image/jpeg" || $tipo == "image/jpg") {
 
-                $ext = substr($tipoMIME, 6);
+                $ext = substr($tipo, 6);
                 $fechaAct = date_create();
                 $ruta = './imagenes/' . basename(date_timestamp_get($fechaAct) . "." . $ext);
                 $movido = move_uploaded_file($FILE['imagen']['tmp_name'], $ruta);
                 if ($movido == true) {
                     $imagen = $ruta;
                 } else {
-                    $errores['texto'] = "ERROR: Al subir fichero";
                     $imagen = null;
                 }
             }
@@ -45,23 +47,18 @@ class Entrada extends Modelo
 
         if ($imagen !==  null) {
             return new Entrada(
+                autor: $idAutor,
                 texto: $texto,
                 imagen: $imagen
             );
         } else {
             $imagen = null;
             return new Entrada(
+                autor: $idAutor,
                 texto: $texto,
                 imagen: $imagen
             );
         }
-
-        /* $rutaDefault = "./imagenes/default.jpg";
-        $errores['texto'] = "ERROR: No puedes subir ese fichero";
-        return new Entrada(
-            texto: $texto,
-            imagen: $rutaDefault
-        );*/
     }
     public function getId(): int|null
     {
@@ -107,7 +104,7 @@ class Entrada extends Modelo
             $errores['texto'] = "El texto no puede estar vacío";
         }
         if ($this->imagen == null || empty($this->imagen)) {
-            $errores['imagen'] = "Error: la imagen es incorrecta o no ha sido seleccionada";
+            $errores['imagen'] = "Error: Tipo de fichero no admitido";
         }
 
         return $errores;

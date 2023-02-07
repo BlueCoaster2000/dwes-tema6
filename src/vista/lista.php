@@ -15,12 +15,16 @@
     }
 </style>
 <?php
+
+use dwesgram\modelo\EntradaBd;
+
 if (!empty($datosParaVista['datos'])) {
     echo "<hr>";
     foreach ($datosParaVista['datos'] as $entrada) {
         $texto = $entrada->getTexto();
         $imagen = $entrada->getImagen();
         $id = $entrada->getId();
+        $autor = $entrada->getAutor();
         echo <<<END
             <div class="grid">
             <div>
@@ -29,14 +33,17 @@ if (!empty($datosParaVista['datos'])) {
 
                 <a href="index.php?controlador=entrada&accion=detalle&id={$id}">Detalles</a>
             END;
-        //if($sesion->haySesion()){
-        echo <<<END
-                <a href="index.php?controlador=entrada&accion=actualizar&id={$id}">Editar</a>
+        if ($sesion->haySesion()) {
+            $idUsuario = $sesion->getId();
+            if ($autor == $idUsuario) {
+                echo <<<END
                 <a href="index.php?controlador=entrada&accion=eliminar&id={$id}">Eliminar</a>
                 </div>
                 </div>
                 <hr>
             END;
+            }
+        }
     }
 
     echo "</ul>";
