@@ -14,7 +14,8 @@ class Entrada extends Modelo
         private int|null $id = null,
         private string|null $imagen = null,
         private string|null $autor = null,
-        private int|null $creado = null
+        private int|null $creado = null,
+        public array $mgs = [] //Array para guardar los me gustas que tiene una entrada
     ) {
         $this->errores = [
             'texto' => $texto === null || empty($texto) ? 'El texto no puede estar vacío' : null,
@@ -26,12 +27,13 @@ class Entrada extends Modelo
         $idAutor = htmlentities(trim($POST['id']));
         $texto = $POST && isset($POST['texto']) ? htmlentities(trim($POST['texto'])) : "";
         $imagen = "./imagenes/default.jpg";
+        $meGusta = [];
         if ($POST && isset($FILE['imagen']) && $FILE['imagen']['error'] == 0 && $FILE['imagen']['size'] > 0 ||  $FILE['imagen']['name'] > 0) {
             $imagen = null;
             $imagenTmp = $FILE['imagen']['tmp_name'];
             $tipoMIME = getimagesize($imagenTmp);
             $tipo = $tipoMIME['mime'];
-            if ($tipo == "image/png" || $tipo == "image/jpeg" || $tipo == "image/jpg") {
+            if ($tipo == "image/png" || $tipo == "image/jpeg") {
 
                 $ext = substr($tipo, 6);
                 $fechaAct = date_create();
@@ -49,7 +51,8 @@ class Entrada extends Modelo
             return new Entrada(
                 autor: $idAutor,
                 texto: $texto,
-                imagen: $imagen
+                imagen: $imagen,
+                mgs: $meGusta
             );
         } else {
             $imagen = null;
@@ -85,6 +88,11 @@ class Entrada extends Modelo
         return $this->imagen;
     }
 
+    public function getMgs(): array|null
+    {
+        return $this->mgs;
+    }
+
     public function esValida(): bool
     {
         if ($this->texto == null || $this->imagen == null) {
@@ -92,6 +100,19 @@ class Entrada extends Modelo
         } else {
             return true;
         }
+    }
+    public function verMg()
+    {
+        $ObjetoMeGusts = MeGustaBd::getMeGustas($this->getId());
+        //
+
+        foreach ($ObjetoMeGusts as $mg) {
+            $tempo = $mg->usuario;
+            $arraytempo[] = $tempo;
+        }
+        $numero = count($ObjetoMeGusts);
+
+        return $ObjetoMeGusts;
     }
 
     public function getErrores(): array

@@ -22,14 +22,14 @@ $errores = $usuario !== null ? $usuario->getErrores() : [];
         </div>
         <div class="mb-3">
             <label for="clave" class="form-label">Contraseña</label><br>
-            <input type="text" id="clave" name="clave">
+            <input type="password" id="clave" name="clave">
         </div>
         <? if (isset($errores['clave'])) {
             echo "<p> {$errores['clave']}</p>";
         } ?>
         <div class="mb-3">
             <label for="repiteclave" class="form-label">Repite la contraseña</label><br>
-            <input type="text" id="repiteclave" name="repiteclave">
+            <input type="password" id="repiteclave" name="repiteclave">
         </div>
         <div class="mb-3">
             <label for="avatar">Puedes elegir un avatar</label><br>

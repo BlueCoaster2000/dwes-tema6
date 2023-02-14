@@ -22,9 +22,9 @@
 
 
   .avatar img {
-    display: block;
-    width: 2rem;
-    height: 2rem;
+
+    width: inherit;
+    height: inherit;
     object-fit: contain;
   }
 </style>
@@ -53,10 +53,12 @@
             </li>
         </ul>
         <a class="nav-link" href="index.php?controlador=usuario&accion=logout">Cerrar Sesión <?= "( <strong>" . $sesion->getNombre() . "</strong> )" . "<div class='avatar'>" . $avatar . "</div>" ?></a>
-      <? } else { ?>
-        <button type="button" class="btn btn-outline-secondary btn-sm"> <a class="nav-link" href="index.php?controlador=usuario&accion=login">Iniciar Sesión</a></button>
-        <button type="button" class="btn btn-outline-secondary btn-sm"> <a class="nav-link" href="index.php?controlador=usuario&accion=registro">Crear una cuenta</a></button>
-      <? } ?>
       </div>
+    <? } else { ?>
+      <div class="nav-item">
+        <button type="button" class="btn btn-outline-secondary btn-sm "> <a class="nav-link" href="index.php?controlador=usuario&accion=login">Iniciar Sesión</a></button>
+        <button type="button" class="btn btn-outline-secondary btn-sm"> <a class="nav-link" href="index.php?controlador=usuario&accion=registro">Crear una cuenta</a></button>
+      </div>
+    <? } ?>
     </div>
   </nav>

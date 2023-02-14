@@ -27,7 +27,7 @@ class Usuario extends Modelo
         if ($POST && isset($FILES['avatar']) && $FILES['avatar']['error'] == 0 && $FILES['avatar']['size'] > 0 ||  $FILES['avatar']['name'] > 0) {
             $avatar = null;
             $tipoMIME = $FILES['avatar']['type'];
-            if ($tipoMIME == "image/png" ||  $tipoMIME == "image/jpg") {
+            if ($tipoMIME == "image/png" ||  $tipoMIME == "image/jpeg") {
 
                 $ext = substr($tipoMIME, 6);
                 $fechaAct = date_create();

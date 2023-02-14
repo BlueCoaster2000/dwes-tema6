@@ -4,6 +4,7 @@ namespace dwesgram\modelo;
 
 use dwesgram\modelo\Entrada;
 use dwesgram\modelo\BaseDatos;
+use LDAP\Result;
 
 class EntradaBd
 {
@@ -97,7 +98,7 @@ class EntradaBd
         }
     }
 
-    public static function getAutorByEntradas(int $idAutor): bool|null
+    public static function getAutorByEntradas(int $idAutor): array|null
     {
         try {
             $result = [];
@@ -108,9 +109,16 @@ class EntradaBd
             $resultado = $sentencia->get_result();
             $fila = $resultado->fetch_assoc();
             if ($fila == null) {
-                return false;
+                return [];
             } else {
-                return true;
+                $entrada = new Entrada(
+                    id: $fila['id'],
+                    texto: $fila['texto'],
+                    imagen: $fila['imagen'],
+                    autor: $fila['autor']
+                );
+                $result[] = $entrada;
+                return $result;
             }
         } catch (\Exception $e) {
             echo $e->getMessage();

@@ -5,6 +5,7 @@ namespace dwesgram\controlador;
 use dwesgram\controlador\Controlador;
 use dwesgram\modelo\Entrada;
 use dwesgram\modelo\EntradaBd;
+use dwesgram\modelo\MeGusta;
 use dwesgram\modelo\utilidades\Sesion;
 
 class EntradaControlador extends Controlador
@@ -69,5 +70,28 @@ class EntradaControlador extends Controlador
             return false;
         }
         return false;
+    }
+
+    public function darMeGusta()
+    {
+        $vistaActual = $_GET['route'];
+        $this->vista = 'lista';
+        $sesion = new Sesion();
+        if ($sesion->haySesion()) {
+            $entrada = $_GET && isset($_GET['entrada']) ? htmlspecialchars($_GET['entrada']) : null;
+            $usuario = $_GET && isset($_GET['usuario']) ? htmlspecialchars($_GET['usuario']) : null;
+            if ($entrada == null || $usuario == null) {
+                header('Location:index.php');
+            }
+            MeGustaControlador::nuevo($entrada, $usuario);
+            if ($vistaActual == 'lista') {
+                return EntradaBd::getEntradas();
+            } else if ($vistaActual == 'detalle') {
+                $this->vista = 'entrada/detalle';
+                return EntradaBd::getEntrada($entrada);
+            }
+        } else {
+            header('Location:index.php');
+        }
     }
 }
